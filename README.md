@@ -1,11 +1,35 @@
 # Wizard Click
 
-A simple "button website" clone: click the wizard, get sounds + magic effects.
+![Wizard Click UI](Wizard_UI.png)
 
-## Run
+Wizard Click is a fun, single-file “button website”: click the big wizard button to spawn magical effects and play a custom sound.
 
-Open `wizard.html` in a browser (recommended: serve via a local web server).
+This is meant to be a free starting template for making your own themed button sites (swap the emoji/image, sound, colors, and particles).
 
-## Assets
+Inspired by https://lizard.click/
 
-- `wizard.wav` — click sound
+## What’s included
+
+- A big centered 3D button
+- Local counters: My Clicks, CPS, Best CPS
+- Visual effects: wizard spawns + sparkles/bursts
+- Overlapping click audio (each click triggers its own sound)
+
+## Run it
+
+Best option (recommended): run a tiny local server, then open the URL:
+
+1. `python -m http.server`
+2. Visit `http://localhost:8000/wizard.html`
+
+Quick option: you can also open `wizard.html` directly, but some browsers restrict audio loading for `file://` pages.
+
+## Customize
+
+- Replace the sound: overwrite `wizard.wav` (keep the name)
+- Replace the vibe: edit colors and effects inside `wizard.html`
+- Make it your own “button site”: duplicate `wizard.html` and rename text/assets
+
+## Credits
+
+Made by - Meesh Makes: https://github.com/MeeshMakes
