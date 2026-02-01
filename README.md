@@ -2,8 +2,7 @@
 
 ![Wizard Click UI](Wizard_UI.png)
 
-Live: https://wizard.click
-
+Live: https://wizard.click  
 GitHub Pages (fallback): https://meeshmakes.github.io/wizard-click/
 
 Wizard Click is a fun, single-file “button website”: click the big wizard button to spawn magical effects and play a custom sound.
@@ -14,17 +13,22 @@ Inspired by https://lizard.click/
 
 ## What’s included
 
-- A big centered 3D button
+- Big centered 3D button
 - Local counters: My Clicks, CPS, Best CPS
 - Visual effects: wizard spawns + sparkles/bursts
 - Overlapping click audio (each click triggers its own sound)
 
 ## Run it
 
-Best option (recommended): run a tiny local server, then open the URL:
+Recommended (local server):
 
-1. `python -m http.server`
-2. Visit `http://localhost:8000/wizard.html`
+```bash
+python -m http.server
+```
+
+Then visit:
+
+- http://localhost:8000/wizard.html
 
 Quick option: you can also open `wizard.html` directly, but some browsers restrict audio loading for `file://` pages.
 
