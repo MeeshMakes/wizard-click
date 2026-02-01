@@ -2,6 +2,10 @@
 
 ![Wizard Click UI](Wizard_UI.png)
 
+Live: https://wizard.click
+
+GitHub Pages (fallback): https://meeshmakes.github.io/wizard-click/
+
 Wizard Click is a fun, single-file “button website”: click the big wizard button to spawn magical effects and play a custom sound.
 
 This is meant to be a free starting template for making your own themed button sites (swap the emoji/image, sound, colors, and particles).
