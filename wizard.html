@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wizard Click</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            text-align: center;
+            background: radial-gradient(1200px 800px at 50% 30%, #2a3cff 0%, #0b1450 45%, #060a24 100%);
+            color: white;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .pill {
+            position: absolute;
+            right: 20px;
+            font-weight: 700;
+            border-radius: 999px;
+            padding: 8px 14px;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+            user-select: none;
+        }
+
+        #clicks { top: 20px; background: rgba(0, 0, 0, 0.55); font-size: 15px; }
+        #cps { top: 58px; background: rgba(0, 0, 0, 0.45); font-size: 14px; color: #d6dcff; }
+        #best-cps { top: 92px; background: rgba(255, 215, 0, 0.16); font-size: 14px; color: #ffd700; text-shadow: 0 0 10px rgba(255,215,0,0.8); }
+
+        #credit {
+            position: fixed;
+            left: 50%;
+            bottom: 14px;
+            transform: translateX(-50%);
+            padding: 8px 12px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 12px;
+            user-select: none;
+            z-index: 3;
+        }
+        #credit a {
+            color: rgba(170, 195, 255, 0.95);
+            text-decoration: underline;
+        }
+        #credit a:hover {
+            color: #ffffff;
+        }
+
+        .button-3d {
+            width: 210px;
+            height: 210px;
+            background: rgba(255, 255, 255, 0.97);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 90px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            box-shadow:
+                0 16px 32px rgba(0, 0, 0, 0.30),
+                0 10px 18px rgba(0, 0, 0, 0.22),
+                inset 0 -4px 0 rgba(0, 0, 0, 0.10);
+            transition: none;
+        }
+
+        .button-3d:active {
+            transform: translateY(5px);
+            box-shadow:
+                0 8px 16px rgba(0, 0, 0, 0.30),
+                0 5px 10px rgba(0, 0, 0, 0.22),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.10);
+        }
+
+        .emoji { user-select: none; }
+
+        /* Wizard + magic effects */
+        .sprite {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1000;
+            user-select: none;
+            will-change: transform, opacity, filter;
+        }
+
+        /* 1) Pop + shimmer */
+        @keyframes popShimmer {
+            0% { opacity: 0; transform: translateY(60px) scale(0.5) rotate(-8deg); filter: drop-shadow(0 0 0 rgba(255,255,255,0)); }
+            18% { opacity: 1; transform: translateY(0) scale(1.15) rotate(6deg); filter: drop-shadow(0 0 10px rgba(120,180,255,0.8)); }
+            45% { opacity: 1; transform: translateY(-18px) scale(1.0) rotate(-4deg); }
+            70% { opacity: 0.55; transform: translateY(-34px) scale(0.95) rotate(3deg); filter: drop-shadow(0 0 14px rgba(255,215,0,0.65)); }
+            100% { opacity: 0; transform: translateY(-62px) scale(0.55) rotate(0deg); filter: drop-shadow(0 0 0 rgba(255,255,255,0)); }
+        }
+        .fx-pop { animation: popShimmer 1.7s ease-out forwards; }
+
+        /* 2) Rain down */
+        @keyframes rainDown {
+            0% { opacity: 0; transform: translateY(-160px) scale(0.8) rotate(-10deg); }
+            15% { opacity: 1; }
+            70% { opacity: 0.9; }
+            100% { opacity: 0; transform: translateY(140px) scale(0.6) rotate(10deg); }
+        }
+        .fx-rain { animation: rainDown 1.9s ease-in-out forwards; }
+
+        /* 3) Firework burst particles */
+        .particle {
+            font-size: 22px;
+            opacity: 0;
+        }
+        @keyframes burst {
+            0% { opacity: 0; transform: translate(0,0) scale(0.6) rotate(0deg); }
+            10% { opacity: 1; }
+            70% { opacity: 0.95; }
+            100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.15) rotate(var(--dr)); }
+        }
+        .fx-burst { animation: burst 1.0s cubic-bezier(.15,.9,.2,1) forwards; }
+
+        /* Optional subtle starfield */
+        .star {
+            position: fixed;
+            width: 2px;
+            height: 2px;
+            background: rgba(210, 220, 255, 0.35);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="clicks" class="pill">My Clicks: 0</div>
+    <div id="cps" class="pill">CPS: 0.0</div>
+    <div id="best-cps" class="pill">Best: 0.0</div>
+
+    <button class="button-3d" id="wizardButton" aria-label="Wizard">
+        <span class="emoji">🧙</span>
+    </button>
+
+    <div id="credit">Made by - Meesh Makes. <a href="https://github.com/MeeshMakes" target="_blank" rel="noopener noreferrer">https://github.com/MeeshMakes</a></div>
+
+    <script>
+        // --- Counters (local) ---
+        let clickCount = 0;
+        let clickTimes = [];
+        let bestCPS = 0;
+
+        function updateCPS() {
+            const now = Date.now();
+            clickTimes = clickTimes.filter(t => now - t <= 5000);
+            const cps = clickTimes.length / 5;
+            if (cps > bestCPS) bestCPS = cps;
+            document.getElementById('cps').textContent = 'CPS: ' + cps.toFixed(1);
+            document.getElementById('best-cps').textContent = 'Best: ' + bestCPS.toFixed(1);
+        }
+
+        // --- Wizard + magic visuals ---
+        const WIZARD_EMOJI = '🧙';
+        const SPARKLES = ['✨', '⭐', '🌟', '💥', '🔮'];
+
+        function rand(min, max) { return Math.random() * (max - min) + min; }
+        function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+        function spawnWizard(effect) {
+            const el = document.createElement('div');
+            el.className = 'sprite';
+            el.textContent = WIZARD_EMOJI;
+            el.style.fontSize = Math.floor(rand(34, 54)) + 'px';
+
+            // Random screen placement (like lizard.click)
+            const x = Math.floor(rand(30, window.innerWidth - 80));
+            const y = Math.floor(rand(window.innerHeight * 0.18, window.innerHeight * 0.78));
+            el.style.left = x + 'px';
+            el.style.top = y + 'px';
+
+            if (effect === 'pop') el.classList.add('fx-pop');
+            if (effect === 'rain') el.classList.add('fx-rain');
+
+            document.body.appendChild(el);
+
+            // Remove after animation
+            const ttl = effect === 'rain' ? 1900 : 1700;
+            setTimeout(() => { if (el.parentNode) el.parentNode.removeChild(el); }, ttl);
+        }
+
+        function spawnBurst() {
+            // Firework-style burst of particles around a random point
+            const cx = Math.floor(rand(80, window.innerWidth - 80));
+            const cy = Math.floor(rand(window.innerHeight * 0.22, window.innerHeight * 0.78));
+            const count = Math.floor(rand(10, 18));
+
+            for (let i = 0; i < count; i++) {
+                const p = document.createElement('div');
+                p.className = 'sprite particle fx-burst';
+                p.textContent = pick(SPARKLES);
+                p.style.left = cx + 'px';
+                p.style.top = cy + 'px';
+
+                const angle = rand(0, Math.PI * 2);
+                const dist = rand(40, 140);
+                const dx = Math.cos(angle) * dist;
+                const dy = Math.sin(angle) * dist;
+                const dr = Math.floor(rand(-180, 180)) + 'deg';
+
+                p.style.setProperty('--dx', dx.toFixed(0) + 'px');
+                p.style.setProperty('--dy', dy.toFixed(0) + 'px');
+                p.style.setProperty('--dr', dr);
+
+                p.style.fontSize = Math.floor(rand(18, 28)) + 'px';
+                p.style.filter = 'drop-shadow(0 0 10px rgba(120,180,255,0.7))';
+
+                document.body.appendChild(p);
+                setTimeout(() => { if (p.parentNode) p.parentNode.removeChild(p); }, 1100);
+            }
+        }
+
+        function doMagic() {
+            // Randomly pick an effect per click
+            const r = Math.random();
+            if (r < 0.46) {
+                spawnWizard('pop');
+                // small extra sparkle chance
+                if (Math.random() < 0.35) spawnBurst();
+            } else if (r < 0.78) {
+                spawnWizard('rain');
+            } else {
+                // Big magic
+                spawnWizard('pop');
+                spawnBurst();
+            }
+        }
+
+        // --- Sound: wizard.wav (click = sound, overlap allowed) ---
+        // We prefer Web Audio (unlimited overlap) but also keep an HTMLAudio pool fallback
+        // so it works even when opening the HTML via file:// (where fetch() can be blocked).
+        const WIZARD_SOUND_URL = 'wizard.wav';
+
+        // HTMLAudio pool (fallback / instant while buffer is loading)
+        const audioPool = [];
+        const poolSize = 12;
+        let poolIndex = 0;
+
+        // Web Audio path
+        let audioCtx = null;
+        let wizardBuffer = null;
+        let loadAttempted = false;
+
+        function getAudioContext() {
+            if (!audioCtx) {
+                const Ctx = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new Ctx();
+            }
+            return audioCtx;
+        }
+
+        async function loadWizardSoundOnce() {
+            if (wizardBuffer || loadAttempted) return;
+            loadAttempted = true;
+
+            try {
+                const ctx = getAudioContext();
+                const resp = await fetch(WIZARD_SOUND_URL, { cache: 'force-cache' });
+                if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                const arrayBuf = await resp.arrayBuffer();
+                wizardBuffer = await ctx.decodeAudioData(arrayBuf);
+            } catch (e) {
+                // ignore; HTMLAudio fallback may still work depending on how this page is opened
+            }
+        }
+
+        function initHtmlAudioPool() {
+            if (audioPool.length) return;
+            for (let i = 0; i < poolSize; i++) {
+                const a = new Audio(WIZARD_SOUND_URL);
+                a.preload = 'auto';
+                a.volume = 1.0;
+                audioPool.push(a);
+            }
+        }
+
+        function playWizardSoundHtml() {
+            if (!audioPool.length) initHtmlAudioPool();
+            const a = audioPool[poolIndex];
+            poolIndex = (poolIndex + 1) % poolSize;
+
+            try {
+                a.currentTime = 0;
+                const p = a.play();
+                if (p && typeof p.catch === 'function') p.catch(() => {});
+            } catch (e) {
+                // ignore
+            }
+        }
+
+        function playWizardSound() {
+            // Always fire an HTMLAudio instance immediately (works on file:// and feels instant).
+            // Once WebAudio buffer is loaded, it will take over with true unlimited overlap.
+            playWizardSoundHtml();
+
+            const ctx = getAudioContext();
+            if (ctx.state === 'suspended') {
+                ctx.resume().catch(() => {});
+            }
+
+            if (!wizardBuffer) {
+                loadWizardSoundOnce();
+                return;
+            }
+
+            // Every click => a new source => unlimited overlap.
+            const src = ctx.createBufferSource();
+            src.buffer = wizardBuffer;
+
+            const gain = ctx.createGain();
+            gain.gain.value = 1.0;
+
+            src.connect(gain);
+            gain.connect(ctx.destination);
+            src.start(0);
+        }
+
+        // Make some background stars
+        (function spawnStars() {
+            const starCount = 60;
+            for (let i = 0; i < starCount; i++) {
+                const s = document.createElement('div');
+                s.className = 'star';
+                s.style.left = Math.floor(rand(0, window.innerWidth)) + 'px';
+                s.style.top = Math.floor(rand(0, window.innerHeight)) + 'px';
+                s.style.opacity = rand(0.15, 0.6).toFixed(2);
+                document.body.appendChild(s);
+            }
+        })();
+
+        // Wire button
+        const button = document.getElementById('wizardButton');
+        window.addEventListener('load', () => {
+            // Preload HTML audio so the first click is responsive.
+            initHtmlAudioPool();
+            getAudioContext();
+            loadWizardSoundOnce();
+        });
+
+        // Use pointerdown for instant response timing
+        button.addEventListener('pointerdown', () => {
+            clickCount++;
+            clickTimes.push(Date.now());
+            document.getElementById('clicks').textContent = 'My Clicks: ' + clickCount;
+            updateCPS();
+
+            // Highest priority: sound starts on click
+            playWizardSound();
+
+            // Visuals
+            doMagic();
+        });
+    </script>
+</body>
+</html>
