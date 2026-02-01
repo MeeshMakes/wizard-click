@@ -2,36 +2,39 @@
 
 ![Wizard Click UI](Wizard_UI.png)
 
-GitHub Pages: https://meeshmakes.github.io/wizard-click/
+**🎮 [Play Live →](https://meeshmakes.github.io/wizard-click/)**
 
-Wizard Click is a fun, single-file “button website”: click the big wizard button to spawn magical effects and play a custom sound.
+Wizard Click is a fun, single-file "button website" — click the big wizard button to spawn magical effects and play a custom sound.
 
-This is meant to be a free starting template for making your own themed button sites (swap the emoji/image, sound, colors, and particles).
+This is meant to be a **free starting template** for making your own themed button sites (swap the emoji/image, sound, colors, and particles).
 
-Inspired by https://lizard.click/
+Inspired by [lizard.click](https://lizard.click/)
 
-## What’s included
+## ✨ What's included
 
-- A big centered 3D button
-- Local counters: My Clicks, CPS, Best CPS
-- Visual effects: wizard spawns + sparkles/bursts
-- Overlapping click audio (each click triggers its own sound)
+- **Big centered 3D button** with satisfying click animations
+- **Local counters:** My Clicks, CPS (clicks per second), Best CPS
+- **Visual effects:** wizard spawns + sparkles/bursts around the screen
+- **Overlapping click audio** — each click triggers its own sound instance
 
-## Run it
+## 🚀 Run it
 
-Best option (recommended): run a tiny local server, then open the URL:
+**Best option (recommended):** run a tiny local server, then open the URL:
 
-1. `python -m http.server`
-2. Visit `http://localhost:8000/wizard.html`
+```bash
+python -m http.server
+```
 
-Quick option: you can also open `wizard.html` directly, but some browsers restrict audio loading for `file://` pages.
+Then visit: `http://localhost:8000/wizard.html`
 
-## Customize
+**Quick option:** you can also open `wizard.html` directly in your browser, but some browsers restrict audio loading for `file://` pages.
 
-- Replace the sound: overwrite `wizard.wav` (keep the name)
-- Replace the vibe: edit colors and effects inside `wizard.html`
-- Make it your own “button site”: duplicate `wizard.html` and rename text/assets
+## 🎨 Customize
 
-## Credits
+- **Replace the sound:** overwrite `wizard.wav` (keep the filename)
+- **Replace the vibe:** edit colors and effects inside `wizard.html`
+- **Make it your own:** duplicate `wizard.html` and rename text/assets to create your own themed button site
 
-Made by - Meesh Makes: https://github.com/MeeshMakes
+## 📝 Credits
+
+Made by [Meesh Makes](https://github.com/MeeshMakes)
