@@ -28,9 +28,9 @@ python -m http.server
 
 Then visit:
 
-- http://localhost:8000/wizard.html
+- http://localhost:8000/
 
-Quick option: you can also open `wizard.html` directly, but some browsers restrict audio loading for `file://` pages.
+Quick option: you can also open `index.html` directly, but some browsers restrict audio loading for `file://` pages.
 
 ## Customize
 
